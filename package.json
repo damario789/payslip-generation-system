@@ -1,0 +1,47 @@
+{
+  "name": "payslip-generation-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./server.ts",
+    "migrate": "npx prisma migrate dev --skip-seed --schema ./prisma/schema.prisma",
+    "generate": "npx prisma generate --schema ./prisma/schema.prisma",
+    "seed": "npx prisma db seed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damario789/payslip-generation-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damario789/payslip-generation-system/issues"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "homepage": "https://github.com/damario789/payslip-generation-system#readme",
+  "dependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "@prisma/client": "^6.9.0",
+    "@types/express": "^5.0.3",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.15.30",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
