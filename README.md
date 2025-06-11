@@ -1,6 +1,6 @@
 # payslip-generation-system
 
-Payslip Generation System is a Node.js/Express application for managing employee payslips, built with TypeScript and Prisma ORM.
+Payslip Generation System is a Node.js/Express application for managing employee payslips, built with TypeScript, Prisma ORM, PostgreSQL.
 
 ---
 
