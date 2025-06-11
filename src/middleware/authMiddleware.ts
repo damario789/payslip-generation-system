@@ -8,6 +8,12 @@ export interface AuthRequest extends Request {
   id?: string; // For request tracing
 }
 
+declare module 'express-serve-static-core' {
+  interface Request {
+    id?: string;
+  }
+}
+
 export const addRequestId = (req: AuthRequest, res: Response, next: NextFunction) => {
   req.id = uuidv4();
   next();
