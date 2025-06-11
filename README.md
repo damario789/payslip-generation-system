@@ -72,6 +72,7 @@ The API is documented and ready to test in Postman.
 
 - **Backend:** Node.js with Express, TypeScript
 - **ORM:** Prisma for database access
+- **Database:** PostgreSQL
 - **Authentication:** JWT-based
 - **Validation:** class-validator and class-transformer
 - **Password Hashing:** bcrypt
