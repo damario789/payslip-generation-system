@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { ConflictError, ValidationError } from '../utils/customErrors';
+import { ConflictError, NotFoundError, ValidationError } from '../utils/customErrors';
 import { logAudit } from '../utils/auditLog';
 import { Request } from 'express';
 
@@ -32,6 +32,7 @@ export const submitAttendance = async (data: AttendanceSubmission) => {
 		throw new ConflictError('Attendance already submitted for this day');
 	}
 
+	let attendanceId: number | undefined;
 	await prisma.$transaction(async (tx) => {
 		const inserted = await tx.$queryRaw<{ id: number }[]>`
 			INSERT INTO "Attendance" (
@@ -44,7 +45,7 @@ export const submitAttendance = async (data: AttendanceSubmission) => {
 			)
 			RETURNING id
 		`;
-		const attendanceId = inserted[0]?.id;
+		attendanceId = inserted[0]?.id;
 		await logAudit({
 			action: 'CREATE_ATTENDANCE',
 			entityId: attendanceId,
@@ -55,6 +56,7 @@ export const submitAttendance = async (data: AttendanceSubmission) => {
 			prismaClient: tx
 		});
 	});
+	return attendanceId;
 };
 
 interface AttendanceUpdate {
@@ -77,7 +79,7 @@ export const updateAttendance = async (data: AttendanceUpdate) => {
 	// Check if attendance exists
 	const attendance = await prisma.attendance.findUnique({ where: { id } });
 	if (!attendance) {
-		throw new ValidationError('Attendance record not found');
+		throw new NotFoundError('Attendance record not found');
 	}
 
 	// Check for duplicate attendance for the same employee and date (excluding current record)

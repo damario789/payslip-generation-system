@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import { OvertimeReqDto } from '../schemas/overtimeSchema';
 import { validator } from '../utils/validatorUtil';
 import { submitOvertime, updateOvertime } from '../services/overtimeService';
@@ -7,13 +7,13 @@ interface OvertimeRequest extends Request {
 	user?: { userId: number, role: string };
 }
 
-export const submitOvertimeController = async (req: OvertimeRequest, res: Response): Promise<void> => {
+export const submitOvertimeController: RequestHandler = async (req: OvertimeRequest, res: Response): Promise<void> => {
 	try {
 		const user = req.user;
 		const employeeId = user?.userId;
 		const { date, hours } = await validator(OvertimeReqDto, req.body);
 
-		await submitOvertime({
+		const overtimeId = await submitOvertime({
 			date,
 			hours,
 			employeeId: employeeId!,
@@ -21,13 +21,13 @@ export const submitOvertimeController = async (req: OvertimeRequest, res: Respon
 			createdByType: 'Employee',
 			request: req
 		});
-		res.status(201).json({ message: 'Overtime submitted' });
+		res.status(201).json({ message: 'Overtime submitted', data: { id: overtimeId } });
 	} catch (error) {
 		throw error;
 	}
 };
 
-export const updateOvertimeController = async (req: OvertimeRequest, res: Response): Promise<void> => {
+export const updateOvertimeController: RequestHandler = async (req: OvertimeRequest, res: Response): Promise<void> => {
 	try {
 		const user = req.user;
 		const overtimeId = Number(req.params.id);

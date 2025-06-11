@@ -12,14 +12,14 @@ export const submitAttendanceController: RequestHandler = async (req: Authentica
 	const employeeId = user?.userId;
 	try {
 		const validated = await validator(AttendanceReqDto, req.body)
-		await submitAttendance({
+		const attendanceId = await submitAttendance({
 			...validated,
 			employeeId,
 			createdById: employeeId,
 			createdByType: "Employee",
 			request: req
 		});
-		res.status(201).json({ message: 'Attendance submitted' });
+		res.status(201).json({ message: 'Attendance submitted', data: { id: attendanceId } });
 	} catch (error) {
 		throw error;
 	}

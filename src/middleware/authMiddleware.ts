@@ -27,6 +27,7 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
     req.user = decoded;
     next();
   } catch (error) {
+    console.log(error)
     throw new ForbiddenError('Invalid token');
   }
 };

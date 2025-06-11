@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { logAudit } from '../utils/auditLog';
 import { Request } from 'express';
+import { NotFoundError } from '../utils/customErrors';
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,7 @@ interface OvertimeSubmission {
 export const submitOvertime = async (data: OvertimeSubmission) => {
 	const { date, hours, employeeId, createdById, createdByType, request } = data;
 
+	let overtimeId: number | undefined;
 	await prisma.$transaction(async (tx) => {
 		const overtime = await tx.overtime.create({
 			data: {
@@ -27,9 +29,10 @@ export const submitOvertime = async (data: OvertimeSubmission) => {
 				createdById,
 				createdByType,
 				updatedById: createdById,
-				updatedByType: createdByType,
+				updatedByType: createdByType
 			},
 		});
+		overtimeId = overtime.id;
 		await logAudit({
 			action: 'CREATE_OVERTIME',
 			entityId: overtime.id,
@@ -40,6 +43,7 @@ export const submitOvertime = async (data: OvertimeSubmission) => {
 			prismaClient: tx
 		});
 	});
+	return overtimeId;
 };
 
 interface OvertimeUpdate {
@@ -57,7 +61,7 @@ export const updateOvertime = async (data: OvertimeUpdate) => {
 	// Check if overtime exists
 	const overtime = await prisma.overtime.findUnique({ where: { id } });
 	if (!overtime) {
-		throw new Error('Overtime record not found');
+		throw new NotFoundError('Overtime record not found');
 	}
 
 	await prisma.$transaction(async (tx) => {
