@@ -7,7 +7,7 @@ import { isEmployee } from "../middleware/authMiddleware";
 
 const router = Router();
 
-// POST /payslips - Generate a new payslip (employee only)
+// POST /payslip - Generate a new payslip (employee only)
 router.post("/", isEmployee as express.RequestHandler, generatePayslipController);
 
 export default router;
