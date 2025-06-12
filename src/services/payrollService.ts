@@ -75,7 +75,7 @@ export const runPayroll = async ({
 
 	const employees = await prisma.employee.findMany();
 
-	// Bulk fetch attendance, overtime, reimbursement
+	// Fetch attendance, overtime, reimbursement
 
 	// Attendance days
 	// Query raw
