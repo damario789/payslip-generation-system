@@ -129,8 +129,6 @@ export const runPayroll = async ({
 	const attendanceMap = new Map(attendances.map(a => [a.employeeId, a._count.employeeId]));
 	const overtimeMap = new Map(overtimes.map(o => [o.employeeId, o._sum.hours || 0]));
 	const reimbursementMap = new Map(reimbursements.map(r => [r.employeeId, r._sum.amount || 0]));
-    // Why use new Map? I think .map() already makes a new array, so why not just use an array?
-    // because we need quick lookups by employeeId, using a Map allows O(1) access time
 
 	const totalWorkingDays = getWorkingDays(period.startDate, period.endDate);
 
